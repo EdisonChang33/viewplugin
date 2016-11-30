@@ -1,0 +1,2 @@
+include ':app', ':pluginlib'
+include ':plugin:plugin1'
