@@ -2,11 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ViewPlugin.iml" filepath="$PROJECT_DIR$/ViewPlugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/plugin/plugin.iml" filepath="$PROJECT_DIR$/plugin/plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/plugin/plugin1/plugin1.iml" filepath="$PROJECT_DIR$/plugin/plugin1/plugin1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugin/plugin2/plugin2.iml" filepath="$PROJECT_DIR$/plugin/plugin2/plugin2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugin/plugin3/plugin3.iml" filepath="$PROJECT_DIR$/plugin/plugin3/plugin3.iml" />
       <module fileurl="file://$PROJECT_DIR$/pluginlib/pluginlib.iml" filepath="$PROJECT_DIR$/pluginlib/pluginlib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/viewplugin.iml" filepath="$PROJECT_DIR$/viewplugin.iml" />
     </modules>
   </component>
 </project>

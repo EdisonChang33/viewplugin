@@ -15,10 +15,27 @@
         android:layout_height="wrap_content"
         android:text="Hello World!" />
 
-    <Button
-        android:id="@+id/btn_text"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="start_plugin" />
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_text"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:text="start_plugin" />
+
+        <Button
+            android:id="@+id/btn_text2"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="start_multi_plugin" />
+
+    </LinearLayout>
+
 </RelativeLayout>

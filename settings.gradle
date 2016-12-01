@@ -1,2 +1,4 @@
 include ':app', ':pluginlib'
 include ':plugin:plugin1'
+include ':plugin:plugin2'
+include ':plugin:plugin3'

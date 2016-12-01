@@ -1,4 +1,4 @@
-package com.hobby.pluginlib.base;
+package com.hobby.pluginlib.utils;
 
 /**
  * Created by Chenyichang on 2016/11/29.

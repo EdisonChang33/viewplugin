@@ -11,6 +11,8 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/plugin" />
             <option value="$PROJECT_DIR$/plugin/plugin1" />
+            <option value="$PROJECT_DIR$/plugin/plugin2" />
+            <option value="$PROJECT_DIR$/plugin/plugin3" />
             <option value="$PROJECT_DIR$/pluginlib" />
           </set>
         </option>

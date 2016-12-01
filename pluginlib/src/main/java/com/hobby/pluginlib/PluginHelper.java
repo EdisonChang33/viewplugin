@@ -3,8 +3,9 @@ package com.hobby.pluginlib;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.text.TextUtils;
 
-import com.hobby.pluginlib.base.Config;
+import com.hobby.pluginlib.utils.Config;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -55,7 +56,10 @@ public class PluginHelper {
     }
 
     public static PluginInfo getPlugin(String apkPath) {
-        return mPluginHolder.get(apkPath);
+        if (!TextUtils.isEmpty(apkPath)) {
+            return mPluginHolder.get(apkPath);
+        }
+        return null;
     }
 
     /**

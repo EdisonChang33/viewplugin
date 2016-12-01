@@ -1,57 +1,58 @@
 package com.hobby.pluginlib;
 
-import android.content.res.AssetManager;
-import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.ProgressBar;
 
-import com.hobby.pluginlib.base.IntentConst;
 import com.hobby.pluginlib.inflater.PluginInflaterFactory;
-import com.hobby.pluginlib.ui.BaseActivity;
+import com.hobby.pluginlib.ui.BasePluginActivity;
+import com.hobby.pluginlib.utils.IntentConst;
 
 /**
  * Created by Chenyichang on 2016/11/29.
  */
 
-public class PluginHostMultiTabActivity extends BaseActivity implements IPluginTricker {
+public class PluginHostMultiTabActivity extends BasePluginActivity {
 
     private String localPath[];
     private String fragmentCls[];
 
-    private boolean isInstall;
     private ViewPager viewPager;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         LayoutInflaterCompat.setFactory(getLayoutInflater(), new PluginInflaterFactory());
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_host);
+        setContentView(R.layout.activity_multi_host);
         viewPager = (ViewPager) findViewById(R.id.content);
+        progressBar = (ProgressBar) findViewById(R.id.loading);
 
         localPath = getIntent().getStringArrayExtra(IntentConst.INTENT_KEY_APK_PATHS);
         fragmentCls = getIntent().getStringArrayExtra(IntentConst.INTENT_KEY_FRAGMENTS);
 
-        if (localPath != null && localPath.length > 0) {
-            installPlugin();
-            initViewPager();
-        }
-    }
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                if (localPath != null && localPath.length > 0) {
+                    installPlugin();
+                }
+                return null;
+            }
 
-    protected PluginInfo getPluginInfo() {
-        String path = getPluginPath(0);
-        return getPluginInfo(path);
-    }
-
-    protected PluginInfo getPluginInfo(String path) {
-        if (TextUtils.isEmpty(path)) {
-            return null;
-        }
-        return PluginHelper.getPlugin(path);
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                initViewPager();
+                progressBar.setVisibility(View.GONE);
+            }
+        }.execute();
     }
 
     /**
@@ -61,70 +62,11 @@ public class PluginHostMultiTabActivity extends BaseActivity implements IPluginT
         for (String path : localPath) {
             PluginHelper.getInstance(this).install(path);
         }
-        isInstall = true;
-    }
-
-    protected String getPluginPath(int pos) {
-        return localPath[pos];
-    }
-
-    @Override
-    public AssetManager getAssets() {
-        PluginInfo info = getPluginInfo();
-        if (isInstall && info != null) {
-            return info.assetManager;
-        } else {
-            return super.getAssets();
-        }
-    }
-
-    @Override
-    public Resources getResources() {
-        PluginInfo info = getPluginInfo();
-        if (isInstall && info != null) {
-            return info.resources;
-        } else {
-            return super.getResources();
-        }
-    }
-
-    @Override
-    public ClassLoader getClassLoader() {
-        PluginInfo info = getPluginInfo();
-        if (isInstall && info != null) {
-            return info.classLoader;
-        } else {
-            return super.getClassLoader();
-        }
-    }
-
-    @Override
-    public Resources.Theme getTheme() {
-        PluginInfo info = getPluginInfo();
-        if (isInstall && info != null) {
-            return info.theme;
-        } else {
-            return super.getTheme();
-        }
     }
 
     private void initViewPager() {
-        FragmentPagerAdapter adapter = new HostPageAdapter(getSupportFragmentManager(), fragmentCls, this);
+        FragmentPagerAdapter adapter = new HostPageAdapter(this, getSupportFragmentManager(), fragmentCls, localPath);
         viewPager.setAdapter(adapter);
     }
 
-    @Override
-    public ClassLoader getClassLoader(int pos) {
-        PluginInfo info = getPluginInfo(getPluginPath(pos));
-        if (isInstall && info != null) {
-            return info.classLoader;
-        } else {
-            return super.getClassLoader();
-        }
-    }
-
-    @Override
-    public PluginInfo getPluginInfo(int pos) {
-        return getPluginInfo(getPluginPath(pos));
-    }
 }

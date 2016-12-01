@@ -1,26 +1,29 @@
 package com.hobby.pluginlib;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.hobby.pluginlib.ui.BasePluginActivity;
+
 public class HostPageAdapter extends FragmentPagerAdapter {
 
-    private IPluginTricker pluginTricker;
+    private BasePluginActivity pluginHostActivity;
     private String[] fragClsNames;
+    private String[] localPaths;
 
-    public HostPageAdapter(FragmentManager fm, String[] fragClsNames, IPluginTricker pluginTricker) {
+    public HostPageAdapter(BasePluginActivity pluginHostActivity, FragmentManager fm, String[] fragClsNames, String[] localPaths) {
         super(fm);
-        this.pluginTricker = pluginTricker;
+        this.pluginHostActivity = pluginHostActivity;
         this.fragClsNames = fragClsNames;
+        this.localPaths = localPaths;
     }
 
 
     @Override
     public Fragment getItem(int index) {
         if (index < fragClsNames.length) {
-            return getPluginFragment(index, fragClsNames[index], new Bundle());
+            return getPluginFragment(localPaths[index], fragClsNames[index]);
         }
 
         return new Fragment();
@@ -31,24 +34,13 @@ public class HostPageAdapter extends FragmentPagerAdapter {
         return fragClsNames.length;
     }
 
-    private Fragment getPluginFragment(int index, String fragClass, Bundle bundle) {
+    private Fragment getPluginFragment(String localPath, String fragClass) {
         try {
-            PluginInfo info = pluginTricker.getPluginInfo(index);
-            if (info != null) {
-
-
-            }
-
-            ClassLoader classLoader = pluginTricker.getClassLoader(index);
-            Fragment fragment = (Fragment) classLoader.loadClass(fragClass).newInstance();
-            fragment.setArguments(bundle);
-
-
-
+            Fragment fragment = pluginHostActivity.getFragment(localPath, fragClass);
             return fragment;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return new Fragment();
     }
 }
