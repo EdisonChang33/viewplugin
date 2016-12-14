@@ -38,8 +38,7 @@ public class MainFragment extends BasePluginFragment {
         buttonTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Resources resources = getPluginResources();
-                ToastUtils.showShort(getContext(), resources.getString(R.string.toast_text));
+                ToastUtils.showShort(getContext(), getString(R.string.toast_text));
             }
         });
     }
