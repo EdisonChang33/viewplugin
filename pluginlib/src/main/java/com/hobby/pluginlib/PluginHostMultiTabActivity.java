@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.hobby.pluginlib.bottom.BottomLayout;
 import com.hobby.pluginlib.inflater.PluginInflaterFactory;
 import com.hobby.pluginlib.ui.BasePluginActivity;
 import com.hobby.pluginlib.utils.IntentConst;
@@ -18,11 +19,12 @@ import com.hobby.pluginlib.utils.IntentConst;
  * Created by Chenyichang on 2016/11/29.
  */
 
-public class PluginHostMultiTabActivity extends BasePluginActivity {
+public class PluginHostMultiTabActivity extends BasePluginActivity implements BottomLayout.TabOnClickListener {
 
     private String localPath[];
     private String fragmentCls[];
 
+    private BottomLayout bottomLayout;
     private ViewPager viewPager;
     private ProgressBar progressBar;
 
@@ -31,6 +33,7 @@ public class PluginHostMultiTabActivity extends BasePluginActivity {
         LayoutInflaterCompat.setFactory(getLayoutInflater(), new PluginInflaterFactory());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multi_host);
+        bottomLayout = (BottomLayout) findViewById(R.id.bottom_layout);
         viewPager = (ViewPager) findViewById(R.id.content);
         progressBar = (ProgressBar) findViewById(R.id.loading);
 
@@ -60,13 +63,18 @@ public class PluginHostMultiTabActivity extends BasePluginActivity {
      */
     private void installPlugin() {
         for (String path : localPath) {
-            PluginHelper.getInstance(this).install(path);
+            PluginHelper.getInstance().install(path);
         }
     }
 
     private void initViewPager() {
         FragmentPagerAdapter adapter = new HostPageAdapter(this, getSupportFragmentManager(), fragmentCls, localPath);
         viewPager.setAdapter(adapter);
+        bottomLayout.setOnTabClickListener(this);
     }
 
+    @Override
+    public void onTabClicked(int index) {
+        viewPager.setCurrentItem(index);
+    }
 }

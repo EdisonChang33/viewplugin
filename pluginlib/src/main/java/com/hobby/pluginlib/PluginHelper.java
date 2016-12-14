@@ -1,12 +1,22 @@
 package com.hobby.pluginlib;
 
+import android.app.Application;
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.pm.ApplicationInfo;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import com.hobby.pluginlib.utils.Config;
+import com.hobby.pluginlib.utils.PluginManifestUtil;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
@@ -21,18 +31,18 @@ public class PluginHelper {
     private static PluginHelper sInstance;
 
     private PluginHelper(Context context) {
-        mContext = context.getApplicationContext();
+        mContext = context;
     }
 
-    public static PluginHelper getInstance(Context context) {
-        if (sInstance == null) {
-            synchronized (PluginHelper.class) {
-                if (sInstance == null) {
-                    sInstance = new PluginHelper(context);
-                }
-            }
-        }
+    public static PluginHelper getInstance() {
         return sInstance;
+    }
+
+    public static void init(Context context) {
+        if (sInstance != null) {
+            return;
+        }
+        sInstance = new PluginHelper(context);
     }
 
     private Context mContext;
@@ -51,6 +61,20 @@ public class PluginHelper {
         theme.applyStyle(R.style.AppTheme, false);
 
         pluginInfo = new PluginInfo(apkPath, dexClassLoader, resources, assetManager, theme);
+
+//        try {
+//            PluginManifestUtil.setManifestInfo(mContext, apkPath, pluginInfo);
+//        } catch (XmlPullParserException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        ApplicationInfo appInfo = pluginInfo.getPackageInfo().applicationInfo;
+//        Application app = makeApplication(pluginInfo, appInfo);
+//        attachBaseContext(pluginInfo, app);
+//        pluginInfo.setApplication(app);
+
         mPluginHolder.put(apkPath, pluginInfo);
         return pluginInfo;
     }
@@ -61,6 +85,39 @@ public class PluginHelper {
         }
         return null;
     }
+
+    /**
+     * 构造插件的Application
+     *
+     * @param pluginInfo 插件信息
+     * @param appInfo 插件ApplicationInfo
+     * @return 插件App
+     */
+    private Application makeApplication(PluginInfo pluginInfo, ApplicationInfo appInfo) {
+        String appClassName = appInfo.className;
+        if (appClassName == null) {
+            //Default Application
+            appClassName = Application.class.getName();
+        }
+        try {
+            return (Application) pluginInfo.getClassLoader().loadClass(appClassName).newInstance();
+        } catch (Throwable e) {
+            throw new RuntimeException("Unable to create Application for "
+                    + pluginInfo.getPackageName() + ": "
+                    + e.getMessage());
+        }
+    }
+
+    private void attachBaseContext(PluginInfo info, Application app) {
+        try {
+            Field mBase = ContextWrapper.class.getDeclaredField("mBase");
+            mBase.setAccessible(true);
+            mBase.set(app, new PluginContext(mContext.getApplicationContext(), info));
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * 创建插件classloader
@@ -117,4 +174,7 @@ public class PluginHelper {
         return clazz;
     }
 
+    public File getPluginLibPath(PluginInfo info) {
+        return null;
+    }
 }

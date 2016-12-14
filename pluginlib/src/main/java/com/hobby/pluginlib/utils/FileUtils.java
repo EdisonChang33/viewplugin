@@ -3,6 +3,7 @@ package com.hobby.pluginlib.utils;
 import android.content.Context;
 import android.content.res.AssetManager;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -73,5 +74,17 @@ public class FileUtils {
         while ((read = in.read(buffer)) != -1) {
             out.write(buffer, 0, read);
         }
+    }
+
+    public static void writeToFile(InputStream inputStream, File target) throws IOException {
+        final int BUFFER = 1024;
+        BufferedOutputStream bos = new BufferedOutputStream(
+                new FileOutputStream(target));
+        int count;
+        byte data[] = new byte[BUFFER];
+        while ((count = inputStream.read(data, 0, BUFFER)) != -1) {
+            bos.write(data, 0, count);
+        }
+        bos.close();
     }
 }

@@ -1,5 +1,6 @@
 package com.hobby.pluginlib.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -24,6 +25,11 @@ public abstract class BasePluginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
     }
 
     @Override
@@ -64,6 +70,11 @@ public abstract class BasePluginActivity extends AppCompatActivity {
         return pluginInfo != null ? pluginInfo.theme : super.getTheme();
     }
 
+    @Override
+    public ClassLoader getClassLoader() {
+        return pluginInfo != null ? pluginInfo.classLoader :super.getClassLoader();
+    }
+
     public ClassLoader getClassLoader(String path) {
         PluginInfo pluginInfo = PluginHelper.getPlugin(path);
         if (pluginInfo != null) {
@@ -87,6 +98,8 @@ public abstract class BasePluginActivity extends AppCompatActivity {
     }
 
     public void setOverrideResources(PluginInfo pluginInfo) {
-        this.pluginInfo = pluginInfo;
+        if (pluginInfo != null) {
+            this.pluginInfo = pluginInfo;
+        }
     }
 }

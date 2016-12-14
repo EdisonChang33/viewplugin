@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">pluginLib</string>
+    <string name="host_toast">i am in host</string>
+
+    <string name="tab_plugin1">plugin1</string>
+    <string name="tab_plugin2">plugin2</string>
+    <string name="tab_plugin3">plugin3</string>
+
 </resources>
