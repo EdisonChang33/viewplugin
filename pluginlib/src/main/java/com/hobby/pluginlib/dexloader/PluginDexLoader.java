@@ -1,4 +1,9 @@
-package com.hobby.pluginlib.loader;
+package com.hobby.pluginlib.dexloader;
+
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import dalvik.system.DexClassLoader;
 
@@ -8,14 +13,23 @@ import dalvik.system.DexClassLoader;
 
 public class PluginDexLoader extends DexClassLoader {
 
-    private PluginDexLoader[] deps;
+    private static List<PluginDexLoader> deps = new ArrayList<>();
 
     public PluginDexLoader(String dexPath, String optimizedDirectory, String libraryPath, ClassLoader parent) {
         super(dexPath, optimizedDirectory, libraryPath, parent);
     }
 
-   /* @Override
+    public static void addDeps(PluginDexLoader dexLoader) {
+        deps.add(dexLoader);
+    }
+
+    public static void removeDeps(PluginDexLoader dexLoader) {
+        deps.remove(dexLoader);
+    }
+
+    @Override
     protected Class<?> loadClass(String className, boolean resolve) throws ClassNotFoundException {
+        Log.d("PluginDexLoader", "className = " + className + " resolve = " + resolve);
         Class<?> clazz = findLoadedClass(className);
         if (clazz != null)
             return clazz;
@@ -26,7 +40,7 @@ public class PluginDexLoader extends DexClassLoader {
         }
         if (clazz != null)
             return clazz;
-        if (deps != null) {
+        if (deps != null && !deps.isEmpty()) {
             for (PluginDexLoader c : deps) {
                 try {
                     clazz = c.findClass(className);
@@ -40,7 +54,7 @@ public class PluginDexLoader extends DexClassLoader {
             return clazz;
         clazz = findClass(className);
         return clazz;
-    }*/
+    }
 
 
 }

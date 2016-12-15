@@ -1,4 +1,4 @@
-package com.hobby.pluginlib;
+package com.hobby.pluginlib.environment;
 
 import android.app.Activity;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package com.hobby.pluginlib;
+package com.hobby.pluginlib.sample;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,9 +10,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.hobby.pluginlib.PluginHelper;
+import com.hobby.pluginlib.R;
 import com.hobby.pluginlib.utils.IntentConst;
 import com.hobby.pluginlib.inflater.PluginInflaterFactory;
-import com.hobby.pluginlib.ui.BasePluginActivity;
+import com.hobby.pluginlib.base.BasePluginActivity;
 import com.hobby.pluginlib.utils.ToastUtils;
 
 /**

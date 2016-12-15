@@ -20,7 +20,7 @@
         android:indeterminate="true"
         android:indeterminateBehavior="repeat" />
 
-    <com.hobby.pluginlib.bottom.BottomLayout
+    <com.hobby.pluginlib.view.BottomLayout
         android:id="@+id/bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

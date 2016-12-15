@@ -1,15 +1,24 @@
 package com.hobby.pluginlib;
 
 import android.app.Application;
+import android.app.Instrumentation;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.pm.ApplicationInfo;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
-import com.hobby.pluginlib.utils.Config;
+import com.hobby.pluginlib.Exception.PluginNotFoundException;
+import com.hobby.pluginlib.consts.PluginComponent;
+import com.hobby.pluginlib.delegate.DelegateActivityThread;
+import com.hobby.pluginlib.environment.PluginContext;
+import com.hobby.pluginlib.dexloader.DynamicJarLoader;
+import com.hobby.pluginlib.environment.PluginInfo;
+import com.hobby.pluginlib.environment.PluginInstrumentation;
+import com.hobby.pluginlib.selector.DefaultActivitySelector;
+import com.hobby.pluginlib.selector.DynamicActivitySelector;
+import com.hobby.pluginlib.consts.Config;
 import com.hobby.pluginlib.utils.PluginManifestUtil;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -19,6 +28,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Map;
 
 import dalvik.system.DexClassLoader;
 
@@ -32,6 +42,13 @@ public class PluginHelper {
 
     private PluginHelper(Context context) {
         mContext = context;
+        PluginComponent.init();
+        DelegateActivityThread delegateActivityThread = DelegateActivityThread.getSingleton();
+        Instrumentation originInstrumentation = delegateActivityThread.getInstrumentation();
+        if (!(originInstrumentation instanceof PluginInstrumentation)) {
+            PluginInstrumentation pluginInstrumentation = new PluginInstrumentation(originInstrumentation);
+            delegateActivityThread.setInstrumentation(pluginInstrumentation);
+        }
     }
 
     public static PluginHelper getInstance() {
@@ -46,7 +63,9 @@ public class PluginHelper {
     }
 
     private Context mContext;
-    public final static HashMap<String, PluginInfo> mPluginHolder = new HashMap<>();
+    public final Map<String, PluginInfo> mPluginHolder = new HashMap<>();
+    public final Map<DexClassLoader, PluginInfo> mDexPluginHolder = new HashMap<>();
+    public final Map<String, PluginInfo> mPkgPluginHolder = new HashMap<>();
 
     public PluginInfo install(String apkPath) {
         PluginInfo pluginInfo = mPluginHolder.get(apkPath);
@@ -60,28 +79,36 @@ public class PluginHelper {
         Resources.Theme theme = resources.newTheme();
         theme.applyStyle(R.style.AppTheme, false);
 
-        pluginInfo = new PluginInfo(apkPath, dexClassLoader, resources, assetManager, theme);
+        pluginInfo = new PluginInfo(/*apkPath, dexClassLoader, resources, assetManager, theme*/);
+        pluginInfo.setFilePath(apkPath);
+        pluginInfo.setAssetManager(assetManager);
+        pluginInfo.setClassLoader(dexClassLoader);
+        pluginInfo.setResources(resources);
+        pluginInfo.setTheme(theme);
 
-//        try {
-//            PluginManifestUtil.setManifestInfo(mContext, apkPath, pluginInfo);
-//        } catch (XmlPullParserException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        ApplicationInfo appInfo = pluginInfo.getPackageInfo().applicationInfo;
-//        Application app = makeApplication(pluginInfo, appInfo);
-//        attachBaseContext(pluginInfo, app);
-//        pluginInfo.setApplication(app);
+        try {
+            PluginManifestUtil.setManifestInfo(mContext, apkPath, pluginInfo);
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ApplicationInfo appInfo = pluginInfo.getPackageInfo().applicationInfo;
+        Application app = makeApplication(pluginInfo, appInfo);
+        attachBaseContext(pluginInfo, app);
+        pluginInfo.setApplication(app);
 
         mPluginHolder.put(apkPath, pluginInfo);
+        mDexPluginHolder.put(dexClassLoader, pluginInfo);
+        mPkgPluginHolder.put(pluginInfo.getPackageName(), pluginInfo);
         return pluginInfo;
     }
 
+
     public static PluginInfo getPlugin(String apkPath) {
-        if (!TextUtils.isEmpty(apkPath)) {
-            return mPluginHolder.get(apkPath);
+        if (!TextUtils.isEmpty(apkPath) && PluginHelper.getInstance() != null) {
+            return PluginHelper.getInstance().mPluginHolder.get(apkPath);
         }
         return null;
     }
@@ -90,7 +117,7 @@ public class PluginHelper {
      * 构造插件的Application
      *
      * @param pluginInfo 插件信息
-     * @param appInfo 插件ApplicationInfo
+     * @param appInfo    插件ApplicationInfo
      * @return 插件App
      */
     private Application makeApplication(PluginInfo pluginInfo, ApplicationInfo appInfo) {
@@ -176,5 +203,37 @@ public class PluginHelper {
 
     public File getPluginLibPath(PluginInfo info) {
         return null;
+    }
+
+    public Map<String, PluginInfo> getPlugins() {
+        return mPluginHolder;
+    }
+
+    public PluginInfo tryGetPluginInfo(String pluginPkg) throws PluginNotFoundException {
+
+        PluginInfo plug = findPluginByPackageName(pluginPkg);
+        if (plug == null) {
+            throw new PluginNotFoundException("plug not found by:"
+                    + pluginPkg);
+        }
+        return plug;
+    }
+
+    /**
+     * 指定插件包名取得插件信息
+     *
+     * @param packageName 插件包名
+     * @return 插件信息
+     */
+    public PluginInfo findPluginByPackageName(String packageName) {
+        return mPkgPluginHolder.get(packageName);
+    }
+
+    public PluginInfo findPluginByDexLoader(DexClassLoader dexClassLoader) {
+        return mDexPluginHolder.get(dexClassLoader);
+    }
+
+    public DynamicActivitySelector getActivitySelector() {
+        return DefaultActivitySelector.getDefault();
     }
 }

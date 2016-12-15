@@ -3,4 +3,5 @@
     <string name="hello_world">hello world, i am plugin 2</string>
     <string name="btn_text">btn test</string>
     <string name="toast_text">i am plugin 2</string>
+    <string name="second_text">i am plugin 2, second activity</string>
 </resources>

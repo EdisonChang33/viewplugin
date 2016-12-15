@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.hobby.pluginlib.utils.Config;
-import com.hobby.pluginlib.ui.BasePluginActivity;
+import com.hobby.pluginlib.consts.Config;
+import com.hobby.pluginlib.base.BasePluginActivity;
 import com.hobby.pluginlib.utils.ApkUtils;
 import com.hobby.pluginlib.utils.FileUtils;
 
@@ -42,7 +42,7 @@ public class MainActivity extends BasePluginActivity {
 
     private void startPluginHost() {
         PluginItem item = new PluginItem();
-        item.pluginPath = getFilePath(this, Config.SDK_APK_PLUGIN1);
+        item.pluginPath = getFilePath(this, Config.SDK_APK_NEWS_PLUGIN);
         item.rootFragment = ApkUtils.getRootFragment(this, item.pluginPath);
         item.appLogo = ApkUtils.getApplicationIcon(this, item.pluginPath);
         item.name = ApkUtils.getApplicationLabel(this, item.pluginPath);

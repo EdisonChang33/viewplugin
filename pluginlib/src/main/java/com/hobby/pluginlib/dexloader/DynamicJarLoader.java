@@ -1,6 +1,4 @@
-package com.hobby.pluginlib;
-
-import com.hobby.pluginlib.loader.PluginDexLoader;
+package com.hobby.pluginlib.dexloader;
 
 import dalvik.system.DexClassLoader;
 
@@ -8,7 +6,7 @@ import dalvik.system.DexClassLoader;
  * Created by Chenyichang on 2016/11/29.
  */
 
-enum DynamicJarLoader {
+public enum DynamicJarLoader {
 
     INSTANCE;
 

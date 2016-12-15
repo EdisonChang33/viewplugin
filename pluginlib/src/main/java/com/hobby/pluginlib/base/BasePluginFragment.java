@@ -1,31 +1,24 @@
-package com.hobby.pluginlib.ui;
+package com.hobby.pluginlib.base;
 
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.ContextWrapper;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentHostCallback;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hobby.pluginlib.PluginActivity;
-import com.hobby.pluginlib.PluginContext;
 import com.hobby.pluginlib.PluginHelper;
-import com.hobby.pluginlib.PluginHostCallbacks;
-import com.hobby.pluginlib.PluginInfo;
-import com.hobby.pluginlib.loader.PluginResources;
+import com.hobby.pluginlib.environment.PluginHostCallbacks;
+import com.hobby.pluginlib.environment.PluginInfo;
+import com.hobby.pluginlib.environment.PluginActivity;
+import com.hobby.pluginlib.environment.PluginContext;
 import com.hobby.pluginlib.utils.ReflectUtils;
-import com.hobby.pluginlib.utils.ToastUtils;
-
-import java.lang.reflect.Field;
 
 /**
  * Created by Chenyichang on 2016/11/29.
@@ -82,23 +75,8 @@ public abstract class BasePluginFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-//        PluginInfo pluginInfo = PluginHelper.getPlugin(localPath);
-//
-//        // Using PluginResources.inflate() instead of layoutinflater
-//        if (pluginInfo != null) {
-//            return pluginInfo.inflate(getActivity(), getLayoutId(), container, false);
-//        }
         return LayoutInflater.from(getContext()).inflate(getLayoutId(), container, false);
     }
-
-    /*protected Resources getPluginResources() {
-        PluginInfo info = PluginHelper.getPlugin(localPath);
-        if (info != null) {
-            return info.resources;
-        }
-        return getResources();
-    }*/
 
     //由外面传进来
     public void setPluginPath(String path) {

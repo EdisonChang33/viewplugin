@@ -1,4 +1,4 @@
-package com.hobby.pluginlib;
+package com.hobby.pluginlib.sample;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -6,14 +6,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.hobby.pluginlib.bottom.BottomLayout;
+import com.hobby.pluginlib.PluginHelper;
+import com.hobby.pluginlib.R;
+import com.hobby.pluginlib.view.BottomLayout;
 import com.hobby.pluginlib.inflater.PluginInflaterFactory;
-import com.hobby.pluginlib.ui.BasePluginActivity;
+import com.hobby.pluginlib.base.BasePluginActivity;
 import com.hobby.pluginlib.utils.IntentConst;
+import com.hobby.pluginlib.view.HostPageAdapter;
 
 /**
  * Created by Chenyichang on 2016/11/29.

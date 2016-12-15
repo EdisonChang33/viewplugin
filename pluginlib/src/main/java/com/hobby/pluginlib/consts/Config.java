@@ -1,4 +1,4 @@
-package com.hobby.pluginlib.utils;
+package com.hobby.pluginlib.consts;
 
 /**
  * Created by edisonChang on 2016/9/14.

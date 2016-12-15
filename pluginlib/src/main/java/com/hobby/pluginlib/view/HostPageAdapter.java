@@ -1,10 +1,10 @@
-package com.hobby.pluginlib;
+package com.hobby.pluginlib.view;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.hobby.pluginlib.ui.BasePluginActivity;
+import com.hobby.pluginlib.base.BasePluginActivity;
 
 public class HostPageAdapter extends FragmentPagerAdapter {
 

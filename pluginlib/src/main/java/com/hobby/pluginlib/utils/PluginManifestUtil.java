@@ -24,7 +24,7 @@ import android.content.pm.ResolveInfo;
 import android.os.Build;
 
 import com.hobby.pluginlib.PluginHelper;
-import com.hobby.pluginlib.PluginInfo;
+import com.hobby.pluginlib.environment.PluginInfo;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

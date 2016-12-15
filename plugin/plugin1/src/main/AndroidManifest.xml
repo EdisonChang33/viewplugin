@@ -17,6 +17,8 @@
 
         </activity>
 
+        <activity android:name=".SecondActivity"/>
+
         <meta-data
             android:name="root_fragment"
             android:value="com.hobby.plugin1.MainFragment" />

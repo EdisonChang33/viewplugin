@@ -1,4 +1,4 @@
-package com.hobby.pluginlib;
+package com.hobby.pluginlib.environment;
 
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -6,8 +6,7 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 
 import com.hobby.pluginlib.delegate.LayoutInflaterProxyContext;
-import com.hobby.pluginlib.loader.PluginDexLoader;
-import com.hobby.pluginlib.utils.Config;
+import com.hobby.pluginlib.consts.Config;
 
 
 /**
@@ -27,12 +26,6 @@ public class PluginContext extends LayoutInflaterProxyContext {
 
     @Override
     public Resources getResources() {
-
-        if (getClass().getClassLoader() instanceof PluginDexLoader){
-
-        }
-
-
         return plugInfo.getResources();
     }
 
@@ -48,7 +41,7 @@ public class PluginContext extends LayoutInflaterProxyContext {
 
     @Override
     public Resources.Theme getTheme() {
-        return plugInfo != null ? plugInfo.theme : super.getTheme();
+        return plugInfo.getTheme();
     }
 
     @Override

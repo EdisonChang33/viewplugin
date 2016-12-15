@@ -1,4 +1,4 @@
-package com.hobby.pluginlib;
+package com.hobby.pluginlib.environment;
 
 import android.app.Activity;
 import android.content.Context;
@@ -39,6 +39,6 @@ public class PluginActivity extends Activity{
 
     @Override
     public Resources.Theme getTheme() {
-        return plugInfo != null ? plugInfo.theme : super.getTheme();
+        return plugInfo != null ? plugInfo.getTheme() : super.getTheme();
     }
 }

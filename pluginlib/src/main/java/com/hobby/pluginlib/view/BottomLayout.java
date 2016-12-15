@@ -1,4 +1,4 @@
-package com.hobby.pluginlib.bottom;
+package com.hobby.pluginlib.view;
 
 import android.content.Context;
 import android.graphics.Color;
